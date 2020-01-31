@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mri_gil_lock (0.1.0)
+    mri_gil_lock (0.1.1)
 
 GEM
   remote: https://rubygems.org/
