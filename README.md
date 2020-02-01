@@ -1,3 +1,7 @@
 # Demonstration of MRI Ruby's GIL locking
 
-Run `bin/demo.rb`
+```
+bundle
+bundle exec rake compile
+bin/demo.rb
+```
