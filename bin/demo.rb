@@ -19,7 +19,7 @@ def test_gil_lock
 end
 
 puts "First, let's demo a non blocking thread that uses Ruby's sleep:"
-non_blocking_thread = Thread.new do
+ruby_sleep_thread = Thread.new do
   while(true) do
     sleep(2)
   end
@@ -33,23 +33,22 @@ end
 
 begin
   Timeout.timeout(10) do
-    [non_blocking_thread, monitoring_thread].each(&:join)
+    [ruby_sleep_thread, monitoring_thread].each(&:join)
   end
 rescue Timeout::Error
-  non_blocking_thread.kill
+  ruby_sleep_thread.kill
 end
 
-puts "Now let's demo a blocking thread that uses a C extension sleep:"
-blocking_thread = Thread.new do
+puts "Now let's demo a blocking thread that uses a C extension:"
+c_extension_sleep_thread = Thread.new do
   while(true) do
     MriGilLock::Hold.for_microseconds(2_000_000)
   end
 end
 begin
   Timeout::timeout(10) do
-    [blocking_thread, monitoring_thread].each(&:join)
+    [c_extension_sleep_thread, monitoring_thread].each(&:join)
   end
 rescue Timeout::Error
-  blocking_thread.kill
-  monitoring_thread.kill
+  c_extension_sleep_thread.kill
 end
