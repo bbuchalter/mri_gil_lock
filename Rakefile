@@ -4,8 +4,6 @@ RSpec::Core::RakeTask.new(:spec)
 
 
 require 'rake/extensiontask'
-Rake::ExtensionTask.new('hold')
-
 spec = Gem::Specification.load('mri_gil_lock.gemspec')
 Rake::ExtensionTask.new('hold', spec)
 
