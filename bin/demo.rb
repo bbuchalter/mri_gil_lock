@@ -52,3 +52,20 @@ begin
 rescue Timeout::Error
   c_extension_sleep_thread.kill
 end
+
+puts "Now let's demo a non blocking thread that uses a C extension which releases the GIL:"
+c_extension_sleep_thread_that_releases_the_gil = Thread.new do
+  while(true) do
+    MriGilLock::Hold.for_two_seconds_without_gil
+  end
+end
+begin
+  Timeout::timeout(10) do
+    [c_extension_sleep_thread_that_releases_the_gil, monitoring_thread].each(&:join)
+  end
+rescue Timeout::Error
+  c_extension_sleep_thread_that_releases_the_gil.kill
+end
+
+monitoring_thread.kill # And we're done
+puts "Done!"
